@@ -8,8 +8,12 @@ const app = express(); // Use const here to avoid accidental override
 app.use(express.json()); // To parse JSON bodies
 
 require("dotenv").config();
-app.use(cors());
-
+app.use(
+  cors({
+    origin: "http://localhost:5173", // or whatever your frontend port is
+    credentials: true,
+  })
+);
 // Connect to MongoDB and start server
 mongoose
   .connect(process.env.URL)

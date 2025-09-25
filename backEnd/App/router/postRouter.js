@@ -22,7 +22,7 @@ const {
 } = require("../controller/userPostController");
 
 // Route to upload post with image
-postRoute.post("/uploads", upload.single("image"), createPost);
+postRoute.post("/uploads/:userId/:token", upload.single("image"), createPost);
 postRoute.get("/showall", showAll);
 postRoute.get("/showone/:postId", showOne);
 postRoute.post("/delone/:postId", delOne);

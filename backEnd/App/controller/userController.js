@@ -11,7 +11,7 @@ const otpEmail = require("../emailVerify/otpEmail.js");
 // Register a new users
 const registerUser = async (req, res) => {
   try {
-    const { name, email, password } = mongoose.sanitizeFilter(req.body);
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
@@ -145,7 +145,8 @@ const login = async (req, res) => {
 
     const jti = new mongoose.Types.ObjectId().toString();
 
-    const accessToken = jwt.sign(  { id: user._id, jti },
+    const accessToken = jwt.sign(
+      { id: user._id, jti },
       process.env.SECRET_KEY,
       { expiresIn: "10m" }
     );

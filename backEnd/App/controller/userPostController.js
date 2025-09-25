@@ -4,10 +4,12 @@ const fs = require("fs");
 const path = require("path");
 const createPost = async (req, res) => {
   try {
-    const { title, description, userId } = req.body;
+    const { title, description } = req.body;
+    const { userId } = req.params; // User making the request
+    const { token } = req.params; // User making the request
 
     // Check all required fields including image file
-    if (!title || !description || !userId || !req.file) {
+    if (!title || !description || !userId || !req.file || !token) {
       return res.status(400).json({
         status: false,
         message: "All fields (title, description, userId, image) are required",
@@ -57,7 +59,7 @@ const createPost = async (req, res) => {
 
 const showAll = async (req, res) => {
   try {
-    const { userId } = req.body; // or req.query if GET
+    const { userId } = req.params; // User making the request
 
     // Validate userId presence
     if (!userId) {
@@ -96,7 +98,7 @@ const showAll = async (req, res) => {
 
 const showOne = async (req, res) => {
   try {
-    const { userId } = req.body; // User making the request
+    const { userId } = req.params; // User making the request
     const { postId } = req.params; // ID of the post to fetch
 
     if (!userId) {
