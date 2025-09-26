@@ -18,30 +18,43 @@ import VerificationCompleted from "./components/pages/VerificationCompleted";
 import OtpVerify from "./components/pages/OtpVerify";
 import ResetPassword from "./components/pages/ResetPassword";
 import ResendVerification from "./components/pages/ResendVerification";
+import ProtectedRoute from './components/pages/ProtectedRoute'; // ✅ Import this
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<Layout />}>
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgotPassword" element={<ForgotPassword />} />
-        <Route path="/about" element={<About />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/verify/" element={<Verify />} />
+        <Route path="/verify" element={<Verify />} />
         <Route path="/verify/:token" element={<VerificationCompleted />} />
         <Route path="/otp-verification/:email" element={<OtpVerify />} />
         <Route path="/reset-password/:email/:otp" element={<ResetPassword />} />
         <Route path="/resend-verification" element={<ResendVerification />} />
 
-
-
-
+        {/* ✅ Protected Routes */}
+        <Route
+          path="/home"
+          element={
+            <ProtectedRoute>
+              <Home />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/about"
+          element={
+            <ProtectedRoute>
+              <About />
+            </ProtectedRoute>
+          }
+        />
       </Route>
     )
   );
 
-  // ✅ Correctly return JSX here
   return (
     <>
       <ToastContainer />
