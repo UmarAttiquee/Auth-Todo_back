@@ -27,13 +27,19 @@ function ForgotPassword() {
 
     if (forgotPasswordSuccess) {
       toast.success(forgotPasswordMessage);
-      dispatch(reset());
       setTimeout(() => {
         navigate(`/otp-verification/${email}`);
-      }, 2000)// pass email here
+        dispatch(reset()); // Moved here ✅
+      }, 2000);
     }
-  }, [forgotPasswordError, forgotPasswordSuccess, forgotPasswordMessage, dispatch, navigate, email]);
-
+  }, [
+    forgotPasswordError,
+    forgotPasswordSuccess,
+    forgotPasswordMessage,
+    dispatch,
+    navigate,
+    email,
+  ]);
   const handleSubmit = (e) => {
     e.preventDefault();
 
