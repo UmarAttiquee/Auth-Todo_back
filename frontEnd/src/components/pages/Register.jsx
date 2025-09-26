@@ -5,12 +5,15 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { registerUser, reset } from '../../features/authSlicer';
 import Spinner from '../Spinner';
+import ResendVerification from './ResendVerification';
 
 function RegistrationForm() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const { isUser, isLoading, isError, isSuccess, isMessage } = useSelector((state) => state.auth);
+  const { user, isLoading, isError, isSuccess, message } = useSelector(
+    (state) => state.auth
+  );
 
   const [showPass, setShowPass] = useState(false);
   const [formData, setFormData] = useState({
@@ -42,19 +45,18 @@ function RegistrationForm() {
 
   useEffect(() => {
     if (isError) {
-      toast.error(isMessage || "Registration failed");
+      toast.error(message || "Registration failed");
     }
 
-    if (isSuccess) {
-      toast.success("Registered successfully");
-      navigate('/login');
+    // When registration succeeds and user with token exists, navigate to verify page
+    if (isSuccess && user && user.token) {
+      toast.success("Registered successfully, please verify your email");
+      navigate(`/verify`);
     }
 
-    // Only reset after effects are triggered
-    return () => {
-      dispatch(reset());
-    };
-  }, [isUser, isError, isSuccess, isMessage, navigate, dispatch]);
+    // Reset auth state to clear flags & messages
+    dispatch(reset());
+  }, [isError, isSuccess, user, message, navigate, dispatch]);
 
   if (isLoading) {
     return <Spinner />;
@@ -103,6 +105,7 @@ function RegistrationForm() {
               type="button"
               onClick={() => setShowPass((prev) => !prev)}
               className="absolute top-3 right-3 text-gray-500 hover:text-blue-500"
+              aria-label={showPass ? "Hide password" : "Show password"}
             >
               {showPass ? <FaEyeSlash /> : <FaEye />}
             </button>
@@ -114,6 +117,7 @@ function RegistrationForm() {
           >
             Register
           </button>
+
         </form>
 
         <p className="text-sm text-center mt-4 text-gray-600">

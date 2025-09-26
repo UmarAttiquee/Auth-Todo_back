@@ -1,8 +1,18 @@
-import React, { useState } from 'react';
-import { FaRegUser, FaEye, FaEyeSlash } from 'react-icons/fa';
-import { NavLink } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { FaEye, FaEyeSlash, FaRegUser } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import { loginUser, reset } from '../../features/authSlicer';
+import Spinner from '../Spinner';
+import ForgotPassword from './ForgotPassword';
 
 function Login() {
+
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { isUser, isLoading, isError, isSuccess, isMessage } = useSelector((state) => state.auth);
+
   const [showPass, setShowPass] = useState(false)
   const [formData, setFormData] = useState({
     email: "",
@@ -21,7 +31,38 @@ function Login() {
   const onSubmit = (e) => {
     e.preventDefault();
     console.log("You entered:", formData);
+
+    if (!email || !password) {
+      toast.error("All fields are required");
+      return;
+    }
+
+    const userData = { email, password };
+    dispatch(loginUser(userData));
+
+    console.log("User Logiin Successfully")
   };
+
+
+  useEffect(() => {
+    if (isError) {
+      toast.error(isMessage || "Login failed");
+    }
+
+    if (isSuccess) {
+      toast.success("Login successfully");
+      navigate('/home');
+    }
+
+    // Only reset after effects are triggered
+    return () => {
+      dispatch(reset());
+    };
+  }, [isUser, isError, isSuccess, isMessage, navigate, dispatch]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className=" flex items-center justify-center  px-4 mt-40">
@@ -61,6 +102,16 @@ function Login() {
             className="w-full bg-blue-500 hover:bg-blue-600 text-white font-semibold py-3 rounded-md transition duration-300"
           >
             Login
+          </button>
+          <button>
+            <span className="text-amber-600 hover:underline ml-1">
+              <NavLink to="/forgotPassword">ForgotPassword</NavLink>
+            </span>
+          </button>
+          <button>
+            <NavLink to="/resend-verification" className="text-amber-600 hover:underline ml-1">
+              ResendVerification Link
+            </NavLink>
           </button>
         </form>
 

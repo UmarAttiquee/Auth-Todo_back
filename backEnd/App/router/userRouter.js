@@ -16,7 +16,7 @@ let userRouter = express.Router();
 
 userRouter.post("/register", validate(yupSchema), registerUser);
 userRouter.post("/resendVerificationLink", resendVerificationLink);
-userRouter.post("/verify", verifyUser);
+userRouter.get("/verify", verifyUser);
 userRouter.post("/login", login);
 userRouter.post("/forgetPassword", forgetPassword);
 userRouter.post("/otp/:email", verifyOtp);

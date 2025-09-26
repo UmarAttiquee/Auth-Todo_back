@@ -341,6 +341,11 @@ const verifyOtp = async (req, res) => {
         message: "User not found",
       });
     }
+    console.log("Verifying OTP for email:", email);
+    console.log("Received OTP:", otp);
+    console.log("Stored OTP:", user.otp);
+    console.log("OTP expiry:", user.otpExpiry);
+    console.log("Current date:", new Date());
 
     // OTP attempt limit
     if (user.otpAttempts >= 5) {
